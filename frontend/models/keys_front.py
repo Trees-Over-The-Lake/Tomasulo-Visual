@@ -1,0 +1,1 @@
+# Keys usados na interface do Menu Principal do Front
