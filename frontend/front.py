@@ -12,13 +12,15 @@ class Tela:
     # Desenhando a tela para o usuário
     def desenharTela(self) -> None:
         
-        self._window = sg.Window(text_front.FRONT_TITLE_WINDOW_TEXT, self.layout_menu, resizable=True)
+        self._window = sg.Window(text_front.FRONT_TITLE_WINDOW_TEXT, self.layout_menu, font='Helvetica 14')
         
         while True:
             event, values = self._window.read()
             
             if event == sg.WIN_CLOSED:
                 break
+            
+            print(values)
             
     # Fechando a janela
     def close(self) -> None:

@@ -1,7 +1,7 @@
 import PySimpleGUI as sg 
 
 # Layout que será usado na aplicação principal
-class LayoutMenu:
+class LayoutMenu: 
     layout = [
-        [sg.Button("Exemplo", disabled=True)]
+        [sg.Button("Exemplo", disabled=True), sg.Button("Exemplo 2")]
     ]
