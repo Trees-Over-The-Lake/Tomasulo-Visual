@@ -1,4 +1,6 @@
+import os
 from frontend import front
 
-menu_principal = front.Tela()
+pwd = os.getcwd()
+menu_principal = front.Tela(pwd+'/assets/instrucoes.txt')
 menu_principal.desenharTela()

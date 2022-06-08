@@ -22,5 +22,21 @@ class MipsInstructions:
     XOR = 'xor' # a = b ^ c 	bitwise XORs numbers.
     
     # Instruções de desvio
+    BEQ  = 'beq'  # Branch if Equal
+    BLEZ = 'blez' # Branch if Less Than or Equal to Zero
+    BNE  = 'bne'  # Branch if Not Equal
+    BGTZ = 'bgtz' # Branch on Greater Than Zero
     
-    # Instruções de descarte
+    # Store
+    SB = 'sb' # Store Byte
+    SH = 'sh' # Store Halfword
+    SW = 'sw' # Store Word
+    
+    # Shifts
+    SLT = 'slt' # Set to 1 if Less Than
+    SLTI = 'slti' # Set to 1 if Less Than Immediate
+    SLTIU = 'sltiu' # Set to 1 if Less Than Unsigned Immediate
+    SLTU = 'sltu' # Set to 1 if Less Than Unsigned
+    SLL = 'sll' # Logical Shift Left
+    SRL = 'srl' # Logical Shift Right (0-extended)
+    SRA = 'sra' # Arithmetic Shift Right (sign-extended)
