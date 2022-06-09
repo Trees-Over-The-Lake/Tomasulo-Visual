@@ -1,14 +1,16 @@
-add r1, r2, r3
-add r1, r2, r3
-add r1, r2, r3
-add r1, r2, r3
-add r1, r2, r3
-add r1, r2, r3
-add r1, r2, r3
-add r1, r2, r3
-add r1, r2, r3
-add r1, r2, r3
-add r1, r2, r3
-add r1, r2, r3
-add r1, r2, r3
-add r1, r2, r3
+# Programa - instruções que precisa para ser executado: instrução
+
+3: add r1, r2, r3
+3: add r1, r2, r3
+3: add r1, r2, r3
+3: add r1, r2, r3
+3: add r1, r2, r3
+3: add r1, r2, r3
+3: add r1, r2, r3
+3: add r1, r2, r3
+3: add r1, r2, r3
+3: add r1, r2, r3
+3: add r1, r2, r3
+3: add r1, r2, r3
+3: add r1, r2, r3
+3: add r1, r2, r3

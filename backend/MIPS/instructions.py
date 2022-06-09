@@ -1,6 +1,6 @@
 # Arquivo contendo todas as instruções suportadas pelo MIPS
 
-class MipsInstructions:    
+class MipsInstructions:        
     # Instruções aritméticas
     ADD   = 'add'  # add a, b, c 	a = b + c 	adds signed numbers.
     ADDU  = 'addu' # adds unsigned numbers.
@@ -40,3 +40,9 @@ class MipsInstructions:
     SLL = 'sll' # Logical Shift Left
     SRL = 'srl' # Logical Shift Right (0-extended)
     SRA = 'sra' # Arithmetic Shift Right (sign-extended)
+    
+    def __init__(self) -> None:
+        self._instrucoes = []
+        
+    def parseInstrucoes():
+        pass

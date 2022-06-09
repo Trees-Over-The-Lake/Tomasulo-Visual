@@ -13,13 +13,17 @@ class Tela:
         self.layout_menu = menu.LayoutMenu().layout 
     
         self.backend = back.Back(instructions_path)
-        self.backend.printInstucoes()
         
     # Desenhando a tela para o usuário
     def desenharTela(self) -> None:
         
+        # Criando a janela
         self._window = sg.Window(text_front.FRONT_TITLE_WINDOW_TEXT, self.layout_menu, resizable=True, font='Helvetica 14')
+                
+        # Pegando as instruções do disco
+        self.backend.printInstucoes()
         
+        # Loop de iteração da tela do usuário
         while True:
             event, values = self._window.read()
             
