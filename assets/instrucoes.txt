@@ -1,16 +1,8 @@
-# Programa - instruções que precisa para ser executado: instrução
+# Programa - ciclos: instrução
 
-3: add r1, r2, r3
-3: add r1, r2, r3
-3: add r1, r2, r3
-3: add r1, r2, r3
-3: add r1, r2, r3
-3: add r1, r2, r3
-3: add r1, r2, r3
-3: add r1, r2, r3
-3: add r1, r2, r3
-3: add r1, r2, r3
-3: add r1, r2, r3
-3: add r1, r2, r3
-3: add r1, r2, r3
-3: add r1, r2, r3
+20: lw r1, r2
+4: add r1, r2, r3
+4: sub r1, r2, r3
+8: mul r1, r2, r3
+8: div r1, r2, r3
+20: sw r1, r2

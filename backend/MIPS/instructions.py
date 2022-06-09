@@ -40,9 +40,3 @@ class MipsInstructions:
     SLL = 'sll' # Logical Shift Left
     SRL = 'srl' # Logical Shift Right (0-extended)
     SRA = 'sra' # Arithmetic Shift Right (sign-extended)
-    
-    def __init__(self) -> None:
-        self._instrucoes = []
-        
-    def parseInstrucoes():
-        pass

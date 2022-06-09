@@ -21,7 +21,8 @@ class Tela:
         self._window = sg.Window(text_front.FRONT_TITLE_WINDOW_TEXT, self.layout_menu, resizable=True, font='Helvetica 14')
                 
         # Pegando as instruções do disco
-        self.backend.printInstucoes()
+        self.backend.parseInstrucoes()
+        self.backend.printInstrucoes()
         
         # Loop de iteração da tela do usuário
         while True:
