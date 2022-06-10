@@ -1,8 +1,9 @@
 # Programa - ciclos: instrução
 
-20: lw r1, r2
-4: add r1, r2, r3
-4: sub r1, r2, r3
-8: mul r1, r2, r3
-8: div r1, r2, r3
-20: sw r1, r2
+1: lw r1, r2
+1: add r1, r2, r3
+1: sub r1, r2, r3
+1: add r3, r1, r1
+1: mul r1, r2, r3
+1: div r1, r2, r3
+1: sw r1, r2

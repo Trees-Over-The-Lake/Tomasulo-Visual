@@ -33,60 +33,6 @@ class Instrucao:
         else:     
             return f"{self.instrucao}, {self.rdest}, {self.rsrc1}, {self.rsrc2}" 
 
-class ReservationStation:
-    def __init__(self) -> None:
-        self.add_sub = []    # Reserva para 3 instruções simultaneas de add and sub
-        self.mul_divide = [] # Reserva para 2 instruções simultaneas de mul e div
-        self.load_store = [] # Reserva para 4 instruções simultaneas de load e store
-        
-        self.instruction_queue = [] # Fila de despacho de instruções
-    
-    # Todos os gets abaixo estão com valores de tamanho hardcoded
-    # Caso queira mudar o tamanho das RS facilmente, só alterar aqui
-    def getAddSubReservationSize(self):
-        return 3
-    
-    def getMulDivideReservationSize(self):
-        return 2
-    
-    def getLoadStoreReservationSize(self):
-        return 4
-
-    def getInstructionQeueReservationSize(self):
-        return 3
-    
-    # Insert a new instruction in the reservation station
-    def insertInstruction(self, i: Instrucao):
-        if i.instrucao == 'add' or i.instrucao == 'sub':
-            if True:
-                ''
-            else:
-                return 'busy' # Reserva cheia
-        
-        elif i.instrucao == 'mul' or i.instrucao == 'div':
-            if True:
-                ''
-                
-            else:
-                return 'busy' # Reserva cheia
-        
-        elif i.instrucao == 'lw' or i.instrucao == 'sw':
-            if True:
-                ''
-                
-            else:
-                return 'busy' # Reserva cheia
-        
-        else:
-            print('Instrução ainda não suportada!')
-
-class ReorderingBuffer:
-    pass
-
-# Classe para controlar todo o algoritmo de Tomasulo
-class Tomasulo:
-    pass
-
 class Back:
     instrucoesDisco: str
     
