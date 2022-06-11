@@ -6,7 +6,8 @@ import enum
 
 class EnumReservationStationStates(enum.Enum):
     SUCCESS = 1
-    BUSY = 2
+    FULL = 2
+    EMPTY = 3
 
 class ReservationStation:
     def __init__(self) -> None:
@@ -30,57 +31,113 @@ class ReservationStation:
     def getInstructionQeueReservationSize(self):
         return 3
     
-    def isInstructionQueueBusy(self):
-        print(len(self.instruction_queue))
+    def getAddSubList(self):
+        return self.add_sub
+    
+    def getMulDivideList(self):
+        return self.mul_divide
+    
+    def getLoadStoreList(self):
+        return self.load_store
+    
+    def isInstructionQueueFull(self):
         return len(self.instruction_queue) == self.getInstructionQeueReservationSize()
+    
+    def isInstructionQueueEmpty(self):
+        return len(self.instruction_queue) == 0
     
     # Insert a new instruction in the reservation station
     def insertInstruction(self, i: Instrucao):
-        # Inserindo na fila de instruções
+        # Inserindo na fila de instruções      
+        self.instruction_queue.append(i)
         
-        if i.instrucao == MipsInstructions.ADD or i.instrucao == MipsInstructions.SUB:
+        # Verificando se ainda há instruções para serem executadas na fila de instruções
+        if self.isInstructionQueueEmpty():
+           return EnumReservationStationStates.EMPTY    
+           
+        # Pegando uma nova instrução para ser executada
+        execute_inst = self.instruction_queue[0]
+        execute_situation = EnumReservationStationStates.FULL # Pré considerando a reserva cheia
+        
+        if execute_inst.instrucao == MipsInstructions.ADD or execute_inst.instrucao == MipsInstructions.SUB:
             # Considerando que não há RAW ou WAR
             if len(self.add_sub) < self.getAddSubReservationSize():
-                self.add_sub.append(ReservationStationCell(i, True))
-                return EnumReservationStationStates.SUCCESS
-                              
-            else:
-                return EnumReservationStationStates.BUSY # Reserva cheia
+                self.add_sub.append(ReservationStationCell(execute_inst, True, execute_inst.ciclosNecessarios))
+                execute_situation = EnumReservationStationStates.SUCCESS
+                            
         
-        elif i.instrucao == MipsInstructions.MUL or i.instrucao == MipsInstructions.DIV:
+        elif execute_inst.instrucao == MipsInstructions.MUL or execute_inst.instrucao == MipsInstructions.DIV:
             if len(self.mul_divide) < self.getMulDivideReservationSize():
-                self.mul_divide.append(ReservationStationCell(i, True))
-                return EnumReservationStationStates.SUCCESS
-                              
-            else:
-                return EnumReservationStationStates.BUSY # Reserva cheia
+                self.mul_divide.append(ReservationStationCell(execute_inst, True, execute_inst.ciclosNecessarios))
+                execute_situation = EnumReservationStationStates.SUCCESS
         
-        elif i.instrucao == MipsInstructions.LW or i.instrucao == MipsInstructions.SW:
+        elif execute_inst.instrucao == MipsInstructions.LW or execute_inst.instrucao == MipsInstructions.SW:
             if len(self.load_store) < self.getLoadStoreReservationSize():
-                self.load_store.append(ReservationStationCell(i, True))
-                return EnumReservationStationStates.SUCCESS
-                              
-            else:
-                return EnumReservationStationStates.BUSY # Reserva cheia
+                self.load_store.append(ReservationStationCell(execute_inst, True, execute_inst.ciclosNecessarios))
+                execute_situation = EnumReservationStationStates.SUCCESS
         
         else:
             print('Instrução ainda não suportada!')
+            
+        if execute_situation == EnumReservationStationStates.SUCCESS:
+            self.instruction_queue.remove(execute_inst)
+            
+        return execute_situation
+    
+    # Executando cada uma das Reservations Stations e liberando os espaços
+    def executeReservations(self):
+        inst: ReservationStationCell
+        for inst in self.add_sub:
+            inst.runCicle()
+            
+            if inst.isInstrDone():
+                self.add_sub.remove(inst)
+                inst.freeCell()
+                continue # Não liberar outras instruções na CDB, ela já está ocupada com essa
+            
+        for inst in self.mul_divide:
+            inst.runCicle()
+            
+            if inst.isInstrDone():
+                self.mul_divide.remove(inst)
+                inst.freeCell()
+                continue # Não liberar outras instruções na CDB, ela já está ocupada com essa
+            
+        for inst in self.load_store:
+            inst.runCicle()
+            
+            if inst.isInstrDone():
+                self.load_store.remove(inst)
+                inst.freeCell()
+                continue # Não liberar outras instruções na CDB, ela já está ocupada com essa
 
 # Celula que armazena o objeto que é inserido nas Reservation Stations
 class ReservationStationCell:
     _instrucao: Instrucao
     _isBusy: bool
+    _numCiclos: int
     
     def __init__(self) -> None:
         self._instrucao = None
         self._isBusy = False
+        self._numCiclos = 0
     
-    def __init__(self, inst: Instrucao, isBusy: bool) -> None:
+    def __init__(self, inst: Instrucao, isBusy: bool, nCiclos: int) -> None:
         self._instrucao = inst
         self._isBusy = isBusy
+        self._numCiclos = nCiclos
         
-    def isBusy(self):
+    def isBusy(self) -> bool:
         return self._isBusy
+    
+    def freeCell(self) -> None:
+        self._isBusy = False
+    
+    def runCicle(self) -> None:
+        self._numCiclos -= 1
+        
+    def isInstrDone(self) -> bool:
+        return self._numCiclos <= 0
     
     def __str__(self) -> str:
         return f'{self._instrucao.getInstr()} | Reserva ocupada: {self._isBusy}'

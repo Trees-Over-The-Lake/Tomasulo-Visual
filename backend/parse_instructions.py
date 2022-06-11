@@ -43,7 +43,7 @@ class ParseInstructions:
             i.remove('')
             
             parseIntruction = Instrucao()
-            parseIntruction.ciclosNecessarios = ciclos
+            parseIntruction.ciclosNecessarios = int(ciclos)
             parseIntruction.instrucao = i[0].strip()
             parseIntruction.rdest = i[1].strip().replace(',', '')
             parseIntruction.rsrc1 = i[2].strip().replace(',', '')

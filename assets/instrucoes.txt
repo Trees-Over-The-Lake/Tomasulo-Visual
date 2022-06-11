@@ -1,37 +1,9 @@
 # Programa - ciclos: instrução
 
-1: lw r1, r2
-1: add r1, r2, r3
-1: sub r1, r2, r3
-1: add r3, r1, r1
-1: mul r1, r2, r3
-1: div r1, r2, r3
-1: sw r1, r2
-1: lw r1, r2
-1: add r1, r2, r3
-1: sub r1, r2, r3
-1: add r3, r1, r1
-1: mul r1, r2, r3
-1: div r1, r2, r3
-1: sw r1, r2
-1: lw r1, r2
-1: add r1, r2, r3
-1: sub r1, r2, r3
-1: add r3, r1, r1
-1: mul r1, r2, r3
-1: div r1, r2, r3
-1: sw r1, r2
-1: lw r1, r2
-1: add r1, r2, r3
-1: sub r1, r2, r3
-1: add r3, r1, r1
-1: mul r1, r2, r3
-1: div r1, r2, r3
-1: sw r1, r2
-1: lw r1, r2
-1: add r1, r2, r3
-1: sub r1, r2, r3
-1: add r3, r1, r1
-1: mul r1, r2, r3
-1: div r1, r2, r3
-1: sw r1, r2
+10: lw r1, r2
+4: beq r1, r2
+3: add r1, r2, r3
+3: sub r1, r2, r3
+3: add r3, r1, r1
+6: mul r1, r2, r3
+6: div r1, r2, r3

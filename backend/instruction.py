@@ -15,7 +15,7 @@ class Instrucao:
         self.rsrc2 = ''
         self.dependencies = []
 
-    def __init__(self, ciclosNecessarios, instrucao, rdest, rscr1, rscr2):
+    def createInstruction(self, ciclosNecessarios, instrucao, rdest, rscr1, rscr2):
         self.ciclosNecessarios = ciclosNecessarios
         self.instrucao = instrucao
         self.rdest = rdest

@@ -3,7 +3,8 @@ import os
 
 b = backend.back.Tomasulo(os.getcwd()+'/assets/instrucoes.txt')
 
-print(b.clock())
-print(b.clock())
-print(b.clock())
-print(b.clock())
+for i in range(20):
+    tmp = b.clock()
+    
+    if not backend.back.TomasuloStates.FINALIZED:
+        print(tmp)
