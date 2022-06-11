@@ -3,7 +3,7 @@ import random
 from backend.MIPS.instructions import MipsInstructions
 from backend.instruction import Instrucao
 from backend.parse_instructions import ParseInstructions
-from backend.reservation_station import EnumReservationStationStates, ReservationStation
+from backend.reservation_station import ReservationStation
 
 class TomasuloStates(enum.Enum):
     SUCCESS = 1
@@ -30,20 +30,20 @@ class Tomasulo:
         
         # Verificando se há espaço para uma nova instrução
         if self.reservationStation.isInstructionQueueFull():
-            self.reservationStation.executeReservations()
             return TomasuloStates.BUSY
         
-        # Pegando uma nova instrução para inserir na fila de instruções
-        if len(self.instrucoes) > 0:
-            next_instr: Instrucao = self.instrucoes.pop(0)
-            
-            # Descartando de 0 a 3 instruções aleatoriamente
-            if next_instr.instrucao == MipsInstructions.BEQ:
-                for _ in range(random.randint(0, min(len(self.instrucoes), 3))):
-                    self.instrucoes.pop(0)
-            
-            else:
-                self.reservationStation.insertInstruction(next_instr)            
+        else:
+            # Pegando uma nova instrução para inserir na fila de instruções
+            if len(self.instrucoes) > 0:
+                next_instr: Instrucao = self.instrucoes.pop(0)
+                
+                # Descartando de 0 a 3 instruções aleatoriamente
+                if next_instr.instrucao == MipsInstructions.BEQ:
+                    for _ in range(random.randint(0, min(len(self.instrucoes), 3))):
+                        self.instrucoes.pop(0)
+                
+                else:
+                    self.reservationStation.insertInstruction(next_instr)            
         
 
         # Executando as Reservations Stations

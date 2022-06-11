@@ -41,7 +41,7 @@ class ReservationStation:
         return self.load_store
     
     def isAddSubEmpty(self):
-        return len(self.add_sub)  == 0
+        return len(self.add_sub) == 0
     
     def isMulDivideEmpty(self):
         return len(self.mul_divide) == 0

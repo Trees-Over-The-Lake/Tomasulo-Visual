@@ -1,6 +1,6 @@
 # Programa - ciclos: instrução
 
-10: lw r1, r2
+3: lw r1, r2
 4: beq r1, r2
 3: add r1, r2, r3
 3: sub r1, r2, r3
