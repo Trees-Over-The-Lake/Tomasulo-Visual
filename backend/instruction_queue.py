@@ -1,4 +1,4 @@
-from instruction import Instrucao
+from backend.instruction import Instrucao
 
 class InstructionQueue:
     def __init__(self):

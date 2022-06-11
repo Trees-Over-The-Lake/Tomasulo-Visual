@@ -2,6 +2,7 @@
 
 from backend.MIPS.instructions import MipsInstructions
 from backend.instruction import Instrucao
+from backend.instruction_queue import InstructionQueue
 import enum
 
 class EnumReservationStationStates(enum.Enum):
@@ -15,7 +16,7 @@ class ReservationStation:
         self.mul_divide = [] # Reserva para 2 instruções simultaneas de mul e div
         self.load_store = [] # Reserva para 4 instruções simultaneas de load e store
         
-        self.instruction_queue = [] # Fila de despacho de instruções
+        self.instruction_queue = InstructionQueue() # Fila de despacho de instruções
     
     # Todos os gets abaixo estão com valores de tamanho hardcoded
     # Caso queira mudar o tamanho das RS facilmente, só alterar aqui
@@ -53,22 +54,22 @@ class ReservationStation:
         return self.isAddSubEmpty() and self.isMulDivideEmpty() and self.isLoadStoreEmpty()
     
     def isInstructionQueueFull(self):
-        return len(self.instruction_queue) == self.getInstructionQeueReservationSize()
+        return len(self.instruction_queue.instruction_queue) == self.getInstructionQeueReservationSize()
     
     def isInstructionQueueEmpty(self):
-        return len(self.instruction_queue) == 0
+        return len(self.instruction_queue.instruction_queue) == 0
     
     # Insert a new instruction in the reservation station
     def insertInstruction(self, i: Instrucao):
         # Inserindo na fila de instruções      
-        self.instruction_queue.append(i)
+        self.instruction_queue.instruction_queue.append(i)
         
         # Verificando se ainda há instruções para serem executadas na fila de instruções
         if self.isInstructionQueueEmpty():
            return EnumReservationStationStates.EMPTY    
            
         # Pegando uma nova instrução para ser executada
-        execute_inst = self.instruction_queue[0]
+        execute_inst = self.instruction_queue.instruction_queue[0]
         execute_situation = EnumReservationStationStates.FULL # Pré considerando a reserva cheia
         
         if execute_inst.instrucao == MipsInstructions.ADD or execute_inst.instrucao == MipsInstructions.SUB:
@@ -92,7 +93,7 @@ class ReservationStation:
             print('Instrução ainda não suportada!')
             
         if execute_situation == EnumReservationStationStates.SUCCESS:
-            self.instruction_queue.remove(execute_inst)
+            self.instruction_queue.instruction_queue.remove(execute_inst)
             
         return execute_situation
     
