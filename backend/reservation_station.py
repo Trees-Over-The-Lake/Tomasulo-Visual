@@ -40,6 +40,18 @@ class ReservationStation:
     def getLoadStoreList(self):
         return self.load_store
     
+    def isAddSubEmpty(self):
+        return len(self.add_sub)  == 0
+    
+    def isMulDivideEmpty(self):
+        return len(self.mul_divide) == 0
+    
+    def isLoadStoreEmpty(self):
+        return len(self.load_store) == 0
+    
+    def isAllReservationsStationsEmpty(self):
+        return self.isAddSubEmpty() and self.isMulDivideEmpty() and self.isLoadStoreEmpty()
+    
     def isInstructionQueueFull(self):
         return len(self.instruction_queue) == self.getInstructionQeueReservationSize()
     
@@ -141,3 +153,6 @@ class ReservationStationCell:
     
     def __str__(self) -> str:
         return f'{self._instrucao.getInstr()} | Reserva ocupada: {self._isBusy}'
+    
+    def __repr__(self) -> str:
+        return f'({self.__str__()})'
