@@ -1,4 +1,6 @@
-2: lw r1, r2
-4: mul r3, r5, r4
-4: add r3, r2, r3
-4: sub r1, r2, r3
+4: lw r1, r2
+4: mul r1, r1, r1
+7: add r2, r2, r2
+7: sub r3, r3, r3
+7: sub r4, r4, r4
+7: sub r5, r5, r5

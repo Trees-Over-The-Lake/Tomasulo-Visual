@@ -56,7 +56,7 @@ class ReservationStation:
         return self.isAddSubEmpty() and self.isMulDivideEmpty() and self.isLoadStoreEmpty()
     
     def isInstructionQueueFull(self):
-        return len(self.instruction_queue.instruction_queue) == self.getInstructionQeueReservationSize()
+        return len(self.instruction_queue.instruction_queue) == self.instruction_queue.queue_size
     
     def isInstructionQueueEmpty(self):
         return len(self.instruction_queue.instruction_queue) == 0
@@ -77,33 +77,47 @@ class ReservationStation:
         if execute_inst.instrucao in [MipsInstructions.ADD, MipsInstructions.SUB]:
             if execute_inst.rdest in self.reg_bank.get_busy_regs():
                 execute_situation = EnumReservationStationStates.FULL
-                print("Esta ocupado!")
+                #print(f"{execute_inst} tenta entrar mas esta ocupado em {execute_inst.rdest}!")
 
             # Considerando que não há RAW ou WAR
             elif len(self.add_sub) < self.getAddSubReservationSize():
                 self.add_sub.append(ReservationStationCell(execute_inst, True, execute_inst.ciclosNecessarios))
                 self.reg_bank.set_reg_as_busy(execute_inst.rdest)
                 execute_situation = EnumReservationStationStates.SUCCESS
+
+            else:
+                #print(f"Todas unidades funcionais que podem ser usadas por {execute_inst} estao cheias!")
+                execute_situation = EnumReservationStationStates.FULL
                             
         
         elif execute_inst.instrucao in [MipsInstructions.MUL, MipsInstructions.DIV]:
             if execute_inst.rdest in self.reg_bank.get_busy_regs():
+                #print(f"{execute_inst} tenta entrar mas esta ocupado em {execute_inst.rdest}!")
                 execute_situation = EnumReservationStationStates.FULL
 
             elif len(self.mul_divide) < self.getMulDivideReservationSize():
                 self.mul_divide.append(ReservationStationCell(execute_inst, True, execute_inst.ciclosNecessarios))
                 self.reg_bank.set_reg_as_busy(execute_inst.rdest)
-                print("Setei como ocupado")
                 execute_situation = EnumReservationStationStates.SUCCESS
+
+            else:
+                #print(f"Todas unidades funcionais que podem ser usadas por {execute_inst} estao cheias!")
+                execute_situation = EnumReservationStationStates.FULL
         
+
         elif execute_inst.instrucao in [MipsInstructions.LW, MipsInstructions.SW]:
             if execute_inst.rdest in self.reg_bank.get_busy_regs():
+                #print(f"{execute_inst} tenta entrar mas esta ocupado em {execute_inst.rdest}!")
                 execute_situation = EnumReservationStationStates.FULL
 
             elif len(self.load_store) < self.getLoadStoreReservationSize():
                 self.load_store.append(ReservationStationCell(execute_inst, True, execute_inst.ciclosNecessarios))
                 self.reg_bank.set_reg_as_busy(execute_inst.rdest)
                 execute_situation = EnumReservationStationStates.SUCCESS
+
+            else:
+                #print(f"Todas unidades funcionais que podem ser usadas por {execute_inst} estao cheias!")
+                execute_situation = EnumReservationStationStates.FULL
         
         else:
             print('Instrução ainda não suportada!')
@@ -127,18 +141,21 @@ class ReservationStation:
             if inst.isInstrDone():
                 try:
                     self.add_sub.remove(inst)
+                    #print(f"Removi o {inst}")
                     self.reg_bank.free_reg(inst.get_instrucao().rdest)
                 except:
                     pass # A instrução não é desse banco
             
                 try:
                     self.mul_divide.remove(inst)
+                    #print(f"Removi o {inst}")
                     self.reg_bank.free_reg(inst.get_instrucao().rdest)
                 except:
                     pass # A instrução não é desse banco
                 
                 try:
                     self.load_store.remove(inst)
+                    #print(f"Removi o {inst}")
                     self.reg_bank.free_reg(inst.get_instrucao().rdest)
                 except:
                     pass
