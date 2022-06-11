@@ -7,3 +7,31 @@
 1: mul r1, r2, r3
 1: div r1, r2, r3
 1: sw r1, r2
+1: lw r1, r2
+1: add r1, r2, r3
+1: sub r1, r2, r3
+1: add r3, r1, r1
+1: mul r1, r2, r3
+1: div r1, r2, r3
+1: sw r1, r2
+1: lw r1, r2
+1: add r1, r2, r3
+1: sub r1, r2, r3
+1: add r3, r1, r1
+1: mul r1, r2, r3
+1: div r1, r2, r3
+1: sw r1, r2
+1: lw r1, r2
+1: add r1, r2, r3
+1: sub r1, r2, r3
+1: add r3, r1, r1
+1: mul r1, r2, r3
+1: div r1, r2, r3
+1: sw r1, r2
+1: lw r1, r2
+1: add r1, r2, r3
+1: sub r1, r2, r3
+1: add r3, r1, r1
+1: mul r1, r2, r3
+1: div r1, r2, r3
+1: sw r1, r2

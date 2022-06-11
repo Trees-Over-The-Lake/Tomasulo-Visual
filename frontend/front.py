@@ -2,17 +2,17 @@ import PySimpleGUI as sg
 
 from frontend.screens import menu
 from frontend.models import text_front
-from backend import back
+from backend import reservation_station
 
 # Classe que desenha a GUI na tela
 class Tela:
     _window: sg.Window
-    backend: back.Back
+    backend: reservation_station.Back
     
     def __init__(self, instructions_path) -> None:
         self.layout_menu = menu.LayoutMenu().layout 
     
-        self.backend = back.Back(instructions_path)
+        self.backend = reservation_station.Back(instructions_path)
         
     # Desenhando a tela para o usuário
     def desenharTela(self) -> None:

@@ -27,6 +27,9 @@ class MipsInstructions:
     BNE  = 'bne'  # Branch if Not Equal
     BGTZ = 'bgtz' # Branch on Greater Than Zero
     
+    # Load
+    LW = 'lw' # Load Word
+    
     # Store
     SB = 'sb' # Store Byte
     SH = 'sh' # Store Halfword
