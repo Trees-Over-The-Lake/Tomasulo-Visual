@@ -3,6 +3,7 @@
 from backend.MIPS.instructions import MipsInstructions
 from backend.instruction import Instrucao
 from backend.instruction_queue import InstructionQueue
+from backend.register import Register
 import enum
 
 class EnumReservationStationStates(enum.Enum):
@@ -15,6 +16,7 @@ class ReservationStation:
         self.add_sub = []    # Reserva para 3 instruções simultaneas de add and sub
         self.mul_divide = [] # Reserva para 2 instruções simultaneas de mul e div
         self.load_store = [] # Reserva para 4 instruções simultaneas de load e store
+        self.reg_bank = Register()
         
         self.instruction_queue = InstructionQueue() # Fila de despacho de instruções
     
@@ -72,21 +74,35 @@ class ReservationStation:
         execute_inst = self.instruction_queue.instruction_queue[0]
         execute_situation = EnumReservationStationStates.FULL # Pré considerando a reserva cheia
         
-        if execute_inst.instrucao == MipsInstructions.ADD or execute_inst.instrucao == MipsInstructions.SUB:
+        if execute_inst.instrucao in [MipsInstructions.ADD, MipsInstructions.SUB]:
+            if execute_inst.rdest in self.reg_bank.get_busy_regs():
+                execute_situation = EnumReservationStationStates.FULL
+                print("Esta ocupado!")
+
             # Considerando que não há RAW ou WAR
-            if len(self.add_sub) < self.getAddSubReservationSize():
+            elif len(self.add_sub) < self.getAddSubReservationSize():
                 self.add_sub.append(ReservationStationCell(execute_inst, True, execute_inst.ciclosNecessarios))
+                self.reg_bank.set_reg_as_busy(execute_inst.rdest)
                 execute_situation = EnumReservationStationStates.SUCCESS
                             
         
-        elif execute_inst.instrucao == MipsInstructions.MUL or execute_inst.instrucao == MipsInstructions.DIV:
-            if len(self.mul_divide) < self.getMulDivideReservationSize():
+        elif execute_inst.instrucao in [MipsInstructions.MUL, MipsInstructions.DIV]:
+            if execute_inst.rdest in self.reg_bank.get_busy_regs():
+                execute_situation = EnumReservationStationStates.FULL
+
+            elif len(self.mul_divide) < self.getMulDivideReservationSize():
                 self.mul_divide.append(ReservationStationCell(execute_inst, True, execute_inst.ciclosNecessarios))
+                self.reg_bank.set_reg_as_busy(execute_inst.rdest)
+                print("Setei como ocupado")
                 execute_situation = EnumReservationStationStates.SUCCESS
         
-        elif execute_inst.instrucao == MipsInstructions.LW or execute_inst.instrucao == MipsInstructions.SW:
-            if len(self.load_store) < self.getLoadStoreReservationSize():
+        elif execute_inst.instrucao in [MipsInstructions.LW, MipsInstructions.SW]:
+            if execute_inst.rdest in self.reg_bank.get_busy_regs():
+                execute_situation = EnumReservationStationStates.FULL
+
+            elif len(self.load_store) < self.getLoadStoreReservationSize():
                 self.load_store.append(ReservationStationCell(execute_inst, True, execute_inst.ciclosNecessarios))
+                self.reg_bank.set_reg_as_busy(execute_inst.rdest)
                 execute_situation = EnumReservationStationStates.SUCCESS
         
         else:
@@ -111,16 +127,19 @@ class ReservationStation:
             if inst.isInstrDone():
                 try:
                     self.add_sub.remove(inst)
+                    self.reg_bank.free_reg(inst.get_instrucao().rdest)
                 except:
                     pass # A instrução não é desse banco
             
                 try:
                     self.mul_divide.remove(inst)
+                    self.reg_bank.free_reg(inst.get_instrucao().rdest)
                 except:
                     pass # A instrução não é desse banco
                 
                 try:
                     self.load_store.remove(inst)
+                    self.reg_bank.free_reg(inst.get_instrucao().rdest)
                 except:
                     pass
                 
@@ -159,3 +178,6 @@ class ReservationStationCell:
     
     def __repr__(self) -> str:
         return f'({self.__str__()})'
+
+    def get_instrucao(self):
+        return self._instrucao

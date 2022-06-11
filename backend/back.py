@@ -24,6 +24,7 @@ class Tomasulo:
     # Executando um clock da CPU para executar o algoritmo
     def clock(self):
         print(self.reservationStation.add_sub, self.reservationStation.mul_divide, self.reservationStation.load_store)
+        print(f"Banco de Registradores = {self.reservationStation.reg_bank.get_busy_regs()}")
         
         if len(self.instrucoes) == 0 and self.reservationStation.isAllReservationsStationsEmpty():
             return TomasuloStates.FINALIZED
