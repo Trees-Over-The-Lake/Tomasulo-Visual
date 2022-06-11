@@ -38,12 +38,15 @@ class Tomasulo:
                 next_instr: Instrucao = self.instrucoes.pop(0)
                 
                 # Descartando de 0 a 3 instruções aleatoriamente
-                if next_instr.instrucao == MipsInstructions.BEQ:
+                if next_instr.instrucao == MipsInstructions.BEQ and next_instr.rsrc1 != next_instr.rsrc2:
                     for _ in range(random.randint(0, min(len(self.instrucoes), 3))):
                         self.instrucoes.pop(0)
                 
+                elif next_instr.instrucao == MipsInstructions.BEQ and next_instr.rsrc1 == next_instr.rsrc2:
+                    return TomasuloStates.FINALIZED
+
                 else:
-                    self.reservationStation.insertInstruction(next_instr)            
+                    self.reservationStation.insertInstruction(next_instr)        
         
 
         # Executando as Reservations Stations
