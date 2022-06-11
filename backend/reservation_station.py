@@ -99,29 +99,31 @@ class ReservationStation:
     # Executando cada uma das Reservations Stations e liberando os espaços
     def executeReservations(self):
         inst: ReservationStationCell
-        for inst in self.add_sub:
+        
+        tmp = []
+        tmp.extend(self.add_sub)
+        tmp.extend(self.mul_divide)
+        tmp.extend(self.load_store)
+        for inst in tmp:
             inst.runCicle()
             
             if inst.isInstrDone():
-                self.add_sub.remove(inst)
+                try:
+                    self.add_sub.remove(inst)
+                except:
+                    pass # A instrução não é desse banco
+            
+                try:
+                    self.mul_divide.remove(inst)
+                except:
+                    pass # A instrução não é desse banco
+                
+                try:
+                    self.load_store.remove(inst)
+                except:
+                    pass
+                
                 inst.freeCell()
-                continue # Não liberar outras instruções na CDB, ela já está ocupada com essa
-            
-        for inst in self.mul_divide:
-            inst.runCicle()
-            
-            if inst.isInstrDone():
-                self.mul_divide.remove(inst)
-                inst.freeCell()
-                continue # Não liberar outras instruções na CDB, ela já está ocupada com essa
-            
-        for inst in self.load_store:
-            inst.runCicle()
-            
-            if inst.isInstrDone():
-                self.load_store.remove(inst)
-                inst.freeCell()
-                continue # Não liberar outras instruções na CDB, ela já está ocupada com essa
 
 # Celula que armazena o objeto que é inserido nas Reservation Stations
 class ReservationStationCell:
