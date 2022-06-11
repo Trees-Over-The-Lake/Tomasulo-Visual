@@ -13,6 +13,18 @@ class Instrucao:
         self.rdest = ''
         self.rsrc1 = ''
         self.rsrc2 = ''
+        self.dependencies = []
+
+    def __init__(self, ciclosNecessarios, instrucao, rdest, rscr1, rscr2):
+        self.ciclosNecessarios = ciclosNecessarios
+        self.instrucao = instrucao
+        self.rdest = rdest
+        self.rsrc1 = rscr1
+        self.rsrc2 = rscr2
+        self.dependencies = []
+
+    def add_dependency(self, reg):
+        self.dependencies.append(reg)
 
     def __str__(self) -> str:
         if self.rsrc2 == '':
