@@ -24,7 +24,3 @@ class InstructionQueue:
                     
                     if self.instruction_queue[j].rsrc1  == self.instruction_queue[i].rdest or self.instruction_queue[j].rsrc2 == self.instruction_queue[i].rdest:
                         self.instruction_queue[j].add_dependency(self.instruction_queue[i].rdest)
-
-                #elif self.instruction_queue[i].instrucao == 'beq':
-                #    if self.instruction_queue[i].rsrc1 == self.instruction_queue[j].rdest or self.instruction_queue[i].rsrc2 == self.instruction_queue[j].rdest:
-                #        print(f"Dependencia no beq com {self.instruction_queue[j]}")
