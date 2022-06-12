@@ -25,34 +25,38 @@ class Tomasulo:
     def clock(self):
         print(self.reservationStation.add_sub, self.reservationStation.mul_divide, self.reservationStation.load_store)
 
+        #print(f"Lista: {self.instrucoes}\nTam = {len(self.instrucoes)}")
+
+        #print(f"Reserva: {self.reservationStation.instruction_queue.instruction_queue}\nTam = {len(self.reservationStation.instruction_queue.instruction_queue)}")
         
-        if len(self.instrucoes) == 0 and self.reservationStation.isAllReservationsStationsEmpty() and len(self.reservationStation.reg_bank.get_busy_regs()) == 0:
+        if len(self.instrucoes) == 0 and self.reservationStation.isAllReservationsStationsEmpty() and len(self.reservationStation.reg_bank.get_busy_regs()) == 0 and not self.reservationStation.instruction_queue.instruction_queue:
             return TomasuloStates.FINALIZED
         
         # Verificando se há espaço para uma nova instrução
         elif self.reservationStation.isInstructionQueueFull():
             return TomasuloStates.BUSY
-
         else:
             if len(self.instrucoes) > 0:
-                next_instr: Instrucao = self.instrucoes[0]
+                for next_instr in self.instrucoes[:self.reservationStation.instruction_queue.queue_size]:
+                    
+                    if next_instr.instrucao == MipsInstructions.BEQ and next_instr.rsrc1 != next_instr.rsrc2:
+                        self.instrucoes.remove(next_instr)
+                        for _ in range(random.randint(0, min(len(self.instrucoes), 3))):
+                            self.instrucoes.pop(0)
+                    
+                    elif next_instr.instrucao == MipsInstructions.BEQ and next_instr.rsrc1 == next_instr.rsrc2:
+                        return TomasuloStates.FINALIZED
 
-                if next_instr.instrucao == MipsInstructions.BEQ and next_instr.rsrc1 != next_instr.rsrc2:
-                    for _ in range(random.randint(0, min(len(self.instrucoes), 3))):
-                        self.instrucoes.pop(0)
+                    else:
+                        situation = self.reservationStation.insertInstruction(next_instr)
+                        if situation == EnumReservationStationStates.SUCCESS:
+                            self.instrucoes.remove(next_instr)
 
-                elif next_instr.instrucao == MipsInstructions.BEQ and next_instr.rsrc1 == next_instr.rsrc2:
-                    return TomasuloStates.FINALIZED
-
-                situation = self.reservationStation.insertInstruction(next_instr)
-
-                if situation == EnumReservationStationStates.SUCCESS:
-                    self.instrucoes.pop(0)
-
-                else:
-                    self.reservationStation.instruction_queue.instruction_queue.remove(next_instr)
+                        else:
+                            pass
         
-
+        self.reservationStation.cycle()
+        
         # Executando as Reservations Stations
         self.reservationStation.executeReservations()
         

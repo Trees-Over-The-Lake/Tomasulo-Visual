@@ -24,7 +24,12 @@ class Instrucao:
         self.dependencies = []
 
     def add_dependency(self, reg):
-        self.dependencies.append(reg)
+        if reg not in self.dependencies:
+            self.dependencies.append(reg)
+
+    def remove_dependency(self, reg):
+        if reg in self.dependencies:
+            self.dependencies.remove(reg)
 
     def __str__(self) -> str:
         if self.rsrc2 == '':

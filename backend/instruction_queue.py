@@ -20,7 +20,5 @@ class InstructionQueue:
     def check_true_dependency(self):
         for i in range(0, len(self.instruction_queue)-1):
             for j in range(i+1, len(self.instruction_queue)):
-                if (self.instruction_queue[i].instrucao in ['add', 'sub', 'mul', 'div']):
-                    
-                    if self.instruction_queue[j].rsrc1  == self.instruction_queue[i].rdest or self.instruction_queue[j].rsrc2 == self.instruction_queue[i].rdest:
-                        self.instruction_queue[j].add_dependency(self.instruction_queue[i].rdest)
+                if self.instruction_queue[j].rsrc1  == self.instruction_queue[i].rdest or self.instruction_queue[j].rsrc2 == self.instruction_queue[i].rdest:
+                    self.instruction_queue[j].add_dependency(self.instruction_queue[i].rdest)

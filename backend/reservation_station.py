@@ -63,69 +63,79 @@ class ReservationStation:
     
     # Insert a new instruction in the reservation station
     def insertInstruction(self, i: Instrucao):
-        # Inserindo na fila de instruções      
-        self.instruction_queue.instruction_queue.append(i)
-        
         # Verificando se ainda há instruções para serem executadas na fila de instruções
-        if self.isInstructionQueueEmpty():
-           return EnumReservationStationStates.EMPTY    
-           
-        # Pegando uma nova instrução para ser executada
-        execute_inst = self.instruction_queue.instruction_queue[0]
-        execute_situation = EnumReservationStationStates.FULL # Pré considerando a reserva cheia
         
-        if execute_inst.instrucao in [MipsInstructions.ADD, MipsInstructions.SUB]:
-            if execute_inst.rdest in self.reg_bank.get_busy_regs():
-                execute_situation = EnumReservationStationStates.FULL
-                #print(f"{execute_inst} tenta entrar mas esta ocupado em {execute_inst.rdest}!")
-
-            # Considerando que não há RAW ou WAR
-            elif len(self.add_sub) < self.getAddSubReservationSize():
-                self.add_sub.append(ReservationStationCell(execute_inst, True, execute_inst.ciclosNecessarios))
-                self.reg_bank.set_reg_as_busy(execute_inst.rdest)
-                execute_situation = EnumReservationStationStates.SUCCESS
-
-            else:
-                #print(f"Todas unidades funcionais que podem ser usadas por {execute_inst} estao cheias!")
-                execute_situation = EnumReservationStationStates.FULL
-                            
-        
-        elif execute_inst.instrucao in [MipsInstructions.MUL, MipsInstructions.DIV]:
-            if execute_inst.rdest in self.reg_bank.get_busy_regs():
-                #print(f"{execute_inst} tenta entrar mas esta ocupado em {execute_inst.rdest}!")
-                execute_situation = EnumReservationStationStates.FULL
-
-            elif len(self.mul_divide) < self.getMulDivideReservationSize():
-                self.mul_divide.append(ReservationStationCell(execute_inst, True, execute_inst.ciclosNecessarios))
-                self.reg_bank.set_reg_as_busy(execute_inst.rdest)
-                execute_situation = EnumReservationStationStates.SUCCESS
-
-            else:
-                #print(f"Todas unidades funcionais que podem ser usadas por {execute_inst} estao cheias!")
-                execute_situation = EnumReservationStationStates.FULL
-        
-
-        elif execute_inst.instrucao in [MipsInstructions.LW, MipsInstructions.SW]:
-            if execute_inst.rdest in self.reg_bank.get_busy_regs():
-                #print(f"{execute_inst} tenta entrar mas esta ocupado em {execute_inst.rdest}!")
-                execute_situation = EnumReservationStationStates.FULL
-
-            elif len(self.load_store) < self.getLoadStoreReservationSize():
-                self.load_store.append(ReservationStationCell(execute_inst, True, execute_inst.ciclosNecessarios))
-                self.reg_bank.set_reg_as_busy(execute_inst.rdest)
-                execute_situation = EnumReservationStationStates.SUCCESS
-
-            else:
-                #print(f"Todas unidades funcionais que podem ser usadas por {execute_inst} estao cheias!")
-                execute_situation = EnumReservationStationStates.FULL
-        
+        if len(self.instruction_queue.instruction_queue) == self.instruction_queue.queue_size:
+            return EnumReservationStationStates.FULL
         else:
-            print('Instrução ainda não suportada!')
+            # Inserindo na fila de instruções
+            self.instruction_queue.instruction_queue.append(i)
+
+            return EnumReservationStationStates.SUCCESS
+
+    def cycle(self):
+        
+        # Pegando uma nova instrução para ser executada
+        for execute_inst in self.instruction_queue.instruction_queue:
+        #execute_inst = self.instruction_queue.instruction_queue[0]
+            execute_situation = EnumReservationStationStates.FULL # Pré considerando a reserva cheia
             
-        if execute_situation == EnumReservationStationStates.SUCCESS:
-            self.instruction_queue.instruction_queue.remove(execute_inst)
+            self.instruction_queue.check_true_dependency()
             
-        return execute_situation
+            if execute_inst.instrucao in [MipsInstructions.ADD, MipsInstructions.SUB]:
+                if execute_inst.dependencies:
+                    #print(f"{execute_inst} tem dependencia em {execute_inst.dependencies}!")
+                    execute_situation = EnumReservationStationStates.FULL
+
+                # Considerando que não há RAW ou WAR
+                elif len(self.add_sub) < self.getAddSubReservationSize():
+                    self.add_sub.append(ReservationStationCell(execute_inst, True, execute_inst.ciclosNecessarios))
+                    self.reg_bank.set_reg_as_busy(execute_inst.rdest)
+                    execute_situation = EnumReservationStationStates.SUCCESS
+
+                else:
+                    #print(f"Todas unidades funcionais que podem ser usadas por {execute_inst} estao cheias!")
+                    execute_situation = EnumReservationStationStates.FULL
+                                
+            
+            elif execute_inst.instrucao in [MipsInstructions.MUL, MipsInstructions.DIV]:
+                if execute_inst.dependencies:
+                    #print(f"{execute_inst} tem dependencia em {execute_inst.dependencies}!")
+                    execute_situation = EnumReservationStationStates.FULL
+
+                elif len(self.mul_divide) < self.getMulDivideReservationSize():
+                    self.mul_divide.append(ReservationStationCell(execute_inst, True, execute_inst.ciclosNecessarios))
+                    self.reg_bank.set_reg_as_busy(execute_inst.rdest)
+                    execute_situation = EnumReservationStationStates.SUCCESS
+
+                else:
+                    #print(f"Todas unidades funcionais que podem ser usadas por {execute_inst} estao cheias!")
+                    execute_situation = EnumReservationStationStates.FULL
+            
+
+            elif execute_inst.instrucao in [MipsInstructions.LW, MipsInstructions.SW]:
+                if execute_inst.dependencies:
+                    #print(f"{execute_inst} tem dependencia em {execute_inst.dependencies}!")
+                    execute_situation = EnumReservationStationStates.FULL
+
+                elif len(self.load_store) < self.getLoadStoreReservationSize():
+                    self.load_store.append(ReservationStationCell(execute_inst, True, execute_inst.ciclosNecessarios))
+                    self.reg_bank.set_reg_as_busy(execute_inst.rdest)
+                    execute_situation = EnumReservationStationStates.SUCCESS
+
+                else:
+                    #print(f"Todas unidades funcionais que podem ser usadas por {execute_inst} estao cheias!")
+                    execute_situation = EnumReservationStationStates.FULL
+            
+            else:
+                print(f"{execute_inst} - Instrução ainda não suportada!")
+            
+            
+            if execute_situation == EnumReservationStationStates.SUCCESS:
+
+                self.instruction_queue.instruction_queue.remove(execute_inst)
+                
+            #return execute_situation
     
     # Executando cada uma das Reservations Stations e liberando os espaços
     def executeReservations(self):
@@ -141,22 +151,29 @@ class ReservationStation:
             if inst.isInstrDone():
                 try:
                     self.add_sub.remove(inst)
-                    #print(f"Removi o {inst}")
+                    for a in self.instruction_queue.instruction_queue:
+                        a.remove_dependency(inst.get_instrucao().rdest)
                     self.reg_bank.free_reg(inst.get_instrucao().rdest)
+                    #print(f"Removi o {inst}")
                 except:
                     pass # A instrução não é desse banco
             
                 try:
                     self.mul_divide.remove(inst)
-                    #print(f"Removi o {inst}")
+                    for a in self.instruction_queue.instruction_queue:
+                        a.remove_dependency(inst.get_instrucao().rdest)
                     self.reg_bank.free_reg(inst.get_instrucao().rdest)
+                    #print(f"Removi o {inst}")
                 except:
                     pass # A instrução não é desse banco
                 
                 try:
                     self.load_store.remove(inst)
-                    #print(f"Removi o {inst}")
+                    for a in self.instruction_queue.instruction_queue:
+                        a.remove_dependency(inst.get_instrucao().rdest)
                     self.reg_bank.free_reg(inst.get_instrucao().rdest)
+
+                    #print(f"Removi o {inst}")
                 except:
                     pass
                 
