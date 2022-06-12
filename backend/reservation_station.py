@@ -80,7 +80,12 @@ class ReservationStation:
         for execute_inst in self.instruction_queue.instruction_queue:
             execute_situation = EnumReservationStationStates.FULL # Pré considerando a reserva cheia
 
-            self.instruction_queue.check_true_dependency()
+            tmp = []
+            tmp.extend(self.add_sub)
+            tmp.extend(self.mul_divide)
+            tmp.extend(self.load_store)
+    
+            self.instruction_queue.check_true_dependency(tmp)
             
             if execute_inst.instrucao in [MipsInstructions.ADD, MipsInstructions.SUB]:
                 if execute_inst.dependencies or execute_inst.rsrc1 in self.reg_bank.get_busy_regs() or execute_inst.rsrc2 in self.reg_bank.get_busy_regs():
@@ -153,6 +158,9 @@ class ReservationStation:
                     self.add_sub.remove(inst)
                     for a in self.instruction_queue.instruction_queue:
                         a.remove_dependency(inst.get_instrucao().rdest)
+                        a.remove_dependency(inst.get_instrucao().rsrc1)
+                        a.remove_dependency(inst.get_instrucao().rsrc2)
+
                     self.reg_bank.free_reg(inst.get_instrucao().rdest)
                     #print(f"Removi o {inst}")
                 except:
@@ -162,6 +170,9 @@ class ReservationStation:
                     self.mul_divide.remove(inst)
                     for a in self.instruction_queue.instruction_queue:
                         a.remove_dependency(inst.get_instrucao().rdest)
+                        a.remove_dependency(inst.get_instrucao().rsrc1)
+                        a.remove_dependency(inst.get_instrucao().rsrc2)
+
                     self.reg_bank.free_reg(inst.get_instrucao().rdest)
                     #print(f"Removi o {inst}")
                 except:
@@ -171,6 +182,9 @@ class ReservationStation:
                     self.load_store.remove(inst)
                     for a in self.instruction_queue.instruction_queue:
                         a.remove_dependency(inst.get_instrucao().rdest)
+                        a.remove_dependency(inst.get_instrucao().rsrc1)
+                        a.remove_dependency(inst.get_instrucao().rsrc2)
+
                     self.reg_bank.free_reg(inst.get_instrucao().rdest)
 
                     #print(f"Removi o {inst}")
