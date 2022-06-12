@@ -24,13 +24,13 @@ class Tomasulo:
     # Executando clocks da CPU para executar o algoritmo
     def clock(self):
         v = True
-        print(self.reservationStation.add_sub, self.reservationStation.mul_divide, self.reservationStation.load_store)
+        #print(self.reservationStation.add_sub, self.reservationStation.mul_divide, self.reservationStation.load_store)
 
         #print(f"Lista: {self.instrucoes}\nTam = {len(self.instrucoes)}")
         #print(f"Reserva: {self.reservationStation.instruction_queue.instruction_queue}\nTam = {len(self.reservationStation.instruction_queue.instruction_queue)}")
         
         if len(self.instrucoes) == 0 and self.reservationStation.isAllReservationsStationsEmpty() and len(self.reservationStation.reg_bank.get_busy_regs()) == 0 and not self.reservationStation.instruction_queue.instruction_queue:
-            return TomasuloStates.FINALIZED
+            return TomasuloStates.FINALIZED, [self.reservationStation.add_sub, self.reservationStation.mul_divide, self.reservationStation.load_store], self.reservationStation.instruction_queue.instruction_queue
         
         # Verificando se há espaço para uma nova instrução
         elif self.reservationStation.isInstructionQueueFull():
@@ -47,7 +47,7 @@ class Tomasulo:
                             self.instrucoes.pop(0)
                     
                     elif next_instr.instrucao == MipsInstructions.BEQ and next_instr.rsrc1 == next_instr.rsrc2:
-                        return TomasuloStates.FINALIZED
+                        return TomasuloStates.FINALIZED, [self.reservationStation.add_sub, self.reservationStation.mul_divide, self.reservationStation.load_store], self.reservationStation.instruction_queue.instruction_queue
 
                     else:
                         situation = self.reservationStation.insertInstruction(next_instr)
@@ -61,4 +61,4 @@ class Tomasulo:
         self.reservationStation.executeReservations()
         
         # Ao chegar aqui tudo rodou como esperado
-        return TomasuloStates.SUCCESS
+        return TomasuloStates.SUCCESS, [self.reservationStation.add_sub, self.reservationStation.mul_divide, self.reservationStation.load_store], self.reservationStation.instruction_queue.instruction_queue

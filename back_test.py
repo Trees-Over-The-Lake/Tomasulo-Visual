@@ -5,7 +5,8 @@ import os
 b = backend.back.Tomasulo(os.getcwd()+'/assets/instrucoes1.txt')
 
 for i in range(100):
-    tmp = b.clock()
+    status, unidades_funcionais, inst_queue = b.clock()
+    load_store = unidades_funcionais[2]
     
-    if tmp == backend.back.TomasuloStates.FINALIZED:
+    if status == backend.back.TomasuloStates.FINALIZED:
         break
