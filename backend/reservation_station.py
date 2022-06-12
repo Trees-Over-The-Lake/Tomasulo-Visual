@@ -75,15 +75,15 @@ class ReservationStation:
 
     def cycle(self):
         
+        
         # Pegando uma nova instrução para ser executada
         for execute_inst in self.instruction_queue.instruction_queue:
-        #execute_inst = self.instruction_queue.instruction_queue[0]
             execute_situation = EnumReservationStationStates.FULL # Pré considerando a reserva cheia
-            
+
             self.instruction_queue.check_true_dependency()
             
             if execute_inst.instrucao in [MipsInstructions.ADD, MipsInstructions.SUB]:
-                if execute_inst.dependencies:
+                if execute_inst.dependencies or execute_inst.rsrc1 in self.reg_bank.get_busy_regs() or execute_inst.rsrc2 in self.reg_bank.get_busy_regs():
                     #print(f"{execute_inst} tem dependencia em {execute_inst.dependencies}!")
                     execute_situation = EnumReservationStationStates.FULL
 
