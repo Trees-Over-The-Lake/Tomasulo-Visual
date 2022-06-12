@@ -24,7 +24,7 @@ class Tomasulo:
     # Executando clocks da CPU para executar o algoritmo
     def clock(self):
         v = True
-        #print(self.reservationStation.add_sub, self.reservationStation.mul_divide, self.reservationStation.load_store)
+        print(self.reservationStation.add_sub, self.reservationStation.mul_divide, self.reservationStation.load_store)
 
         #print(f"Lista: {self.instrucoes}\nTam = {len(self.instrucoes)}")
         #print(f"Reserva: {self.reservationStation.instruction_queue.instruction_queue}\nTam = {len(self.reservationStation.instruction_queue.instruction_queue)}")
