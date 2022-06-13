@@ -152,13 +152,7 @@ color: rgb(0, 0, 0);</string>
     <addaction name="openFile"/>
     <addaction name="exitApp"/>
    </widget>
-   <widget class="QMenu" name="menuHelp">
-    <property name="title">
-     <string>Help</string>
-    </property>
-   </widget>
    <addaction name="menuFile"/>
-   <addaction name="menuHelp"/>
   </widget>
   <action name="openFile">
    <property name="text">
