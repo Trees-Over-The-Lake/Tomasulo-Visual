@@ -56,6 +56,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
     #@pyQtSlot
     def tomasulo_finalized(self):
+        self.instructionsList.clean_instructions()
         self.stepButton.setEnabled(False)
 
 

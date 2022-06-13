@@ -48,7 +48,8 @@ class InstructionsScroll(QScrollArea):
 
             self.tomasulo = None
 
-        self.tomasulo_step_taken.emit(unidades_funcionais,inst_queue)
+        else:
+            self.tomasulo_step_taken.emit(unidades_funcionais,inst_queue)
 
 
     #@pyqtSignal
